@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "donedeal-reviews"
+version = "0.1.0"
+description = ""
+authors = ["Sam <sammeehansam@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.12,<3.13"
+scrapetube = "^2.5.1"
+pytube = "^15.0.0"
+moviepy = "^1.0.3"
+tqdm = "^4.66.1"
+pydub = "^0.25.1"
+pandas = "^2.2.0"
+python-dotenv = "^1.0.1"
+streamlit = "^1.30.0"
+st-click-detector = "^0.1.3"
+langchain = "^0.1.4"
+cohere = "^4.45"
+pinecone-client = "^3.0.2"
+langchain-community = "^0.0.16"
+openai = "^1.10.0"
+tiktoken = "^0.5.2"
+langchain-openai = "^0.0.5"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

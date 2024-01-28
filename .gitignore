@@ -1,0 +1,8 @@
+.env
+.DS_Store
+*.mp3
+*.json
+*.jsonl
+__pycache__/
+data/
+video_ids.txt
