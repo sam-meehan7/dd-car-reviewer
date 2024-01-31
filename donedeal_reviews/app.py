@@ -2,30 +2,41 @@
 from ask_vector_and_supplment_with_ai import answer_question
 import streamlit as st
 from st_click_detector import click_detector
+import random
+
+# Define an array of fun facts
+fun_facts = [
+    "DoneDeal has over 70,000 cars for sale!",
+    "DoneDeal has over 15,000 electric and hybrid cars for sale!"
+]
 
 # Title of the Streamlit app
-st.title("Ask a Question")
+st.title("DoneDeal Car Reviews")
 
 # Using st.form to create a form
 with st.form(key='my_form'):
     # Create a text input for the user to enter their question
-    question = st.text_input("Please enter your question:")
+    question = st.text_input("Please tell us what you are looking for:")
 
     # Create a submit button within the form
     submit_button = st.form_submit_button(label='Submit')
 
-# Placeholder for the "Thinking..." message
-thinking_placeholder = st.empty()
+
+fun_fact_placeholder = st.empty()
 
 if submit_button:
-    # Show "Thinking..." while waiting for the answer
-    thinking_placeholder.text("Thinking...")
+    # Select a random fun fact
+    fun_fact = random.choice(fun_facts)
 
-    # Fetch the answer and vector results
-    answer, vector_results = answer_question(question)
+    # Display the fun fact and loading message
+    with fun_fact_placeholder.container():
+        st.markdown(f"💡 *While you wait, did you know:*\n\n{fun_fact}")
+        with st.spinner('Fetching your results...'):
+            # Fetch the answer and vector results
+            answer, vector_results = answer_question(question)
 
-    # Remove the "Thinking..." text
-    thinking_placeholder.empty()
+    # Clear the status (fun fact and loading message)
+    fun_fact_placeholder.empty()
 
     # Display the answer
     st.write(answer)

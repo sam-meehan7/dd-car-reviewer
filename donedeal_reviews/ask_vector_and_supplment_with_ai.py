@@ -52,36 +52,39 @@ def search_vectorstore(query: str):
     return top_3_results
 
 
-def augment_prompt(query: str, vector_results):
+def frame_prompt(query: str, vector_results):
     # import ipdb;
     # ipdb.set_trace()
     # print(vector_results)
+
     # get the text from the results
     source_knowledge = "\n\n".join([f"{x.metadata['title']}\n{x.page_content}" for x in vector_results])
 
     # feed into an augmented prompt
-    augmented_prompt = f"""
-    # CONTEXT
+    framed_prompt = f"""
+
+    # THE USERS PREFERENCE'S ON THE CAR THEY ARE LOOKING FOR
+    {query}
+
+    # TOP 3 REVIEWS
     {source_knowledge}
 
-    # USER QUESTION
-    {query}
     """
-    return augmented_prompt
+    return framed_prompt
 
 
 def answer_question(question):
     vector_results = search_vectorstore(question)
 
-    augmented_prompt = augment_prompt(question, vector_results)
+    framed_prompt = frame_prompt(question, vector_results)
 
     template = """
     # MISSION
     You are a car expert named David who specalises in reviewing cars for DoneDeal Motors.
-    A user will as you questions to help find the best car for them.
+    A user will tell you the kind of car they are looking for and you will help them choose.
 
     # INSTRUCTIONS
-    You will draw on your top 3 reviews to help answer the user's questions.
+    You will draw on your top 3 reviews to help inform the user's.
     You are from Dublin, Ireland and your super friendly and semi-formal.
     You will give the user 3 recomendations in the following format:
 
@@ -100,6 +103,7 @@ def answer_question(question):
 
     # RULES
     You should never make up information. Always use the context given to you.
+    If the user mentions budget, you should take this into account when making your recomendations.
     """
 
     system_message_prompt = SystemMessagePromptTemplate.from_template(template)
@@ -112,7 +116,7 @@ def answer_question(question):
 
     result = chat(
         chat_prompt.format_prompt(
-            add_aug_prompt_here=augmented_prompt, text=""
+            add_aug_prompt_here=framed_prompt, text=""
         ).to_messages()
     )
     return [result.content, vector_results]
